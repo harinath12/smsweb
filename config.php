@@ -12,7 +12,7 @@ mysql_set_charset('utf8',$link);
 mysql_query('set names utf8');
 date_default_timezone_set('Asia/Kolkata');
 
-
+sdfasdfasdfasdf
 /*
 $hostname		=	"localhost";
 $username		=	"root";
