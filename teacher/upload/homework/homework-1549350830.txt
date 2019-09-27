@@ -1,0 +1,27 @@
+Admin Panel:
+
+#	IN "Student Absent List" we need father name and village name.
+	Mention Date and day details on top 
+
+#
+
+
+
+
+
+
+
+
+
+Teacher Panel:
+#	in attandance mention date and day  details on top.
+#	if we press ok button after taken attandance, ok button should be disabeld.
+	only if any modification occur ok button enable other wise not.
+#	Monthly report need
+#	In gallery dele option need  and if the mouse pointer on the photo, 
+	how many photos are there, that details we need.
+#	if we add any photo to gallery. without admin permisson it is showing 
+	in student gallery.
+#	video file icon not displayed.
+#	how to see the yesterday attendance or perticular date
+ 

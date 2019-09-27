@@ -1,0 +1,48 @@
+In Parent
+*	if student morning present afternoon absent mean
+	what message you give
+	total Present and working days should mention like 32/123 days
+	also in one corner  student must be Present minimum 18o days in a year
+*	parent apply leave today date it is accepting
+	view  should be changed
+*	Open one box name called " Today " it should contain today work that what the 
+	teacher and admin given ie.
+	*  your son is resent today or absent today
+	*  home work any given 
+	*  class notes,  projects, gallery, test, What are in today date
+*  	exam time table view 
+	         date      day           subject      am/pm
+		7/3/19     wednesday     tamil         am
+		8/3/19	   friday         ,,,
+*	what about Exam syllabus where we have to give
+
+*	in result I st Mid term Exam
+		  Quarterly Exam
+		  II nd Mid term Exam
+	          Halfyearly Exam
+		  III rd Mid term exam	
+		  Annual Exam
+		  
+		if subject selected ..... Subject wise.... com9are subject to all exams
+		if selected tamil   subject
+		  I st Mid term Exam......89 %
+		  Quarterly Exam..........87 %
+		  II nd Mid term Exam.....91 %
+	          Halfyearly Exam.........95 % ......
+		if exam selected ..... exam wise.... com9are total mark to all exams
+		  I st Mid term Exam......89 %
+		  Quarterly Exam..........87 %
+		  II nd Mid term Exam.....91 %
+	          Halfyearly Exam.........95 % ......
+
+in admin
+
+* 	stendent leave date changed one day before in student leave list.
+*	school calandar file abloaded on 9.3.19 9rekg
+
+
+
+in teacher
+
+*	in homework not functioning edit and delete key
+	

@@ -1,0 +1,58 @@
+
+
+@media (max-width:824px){
+	
+div.login-logo { 
+	display:none !important;
+}	
+
+a.logo { 
+	display:none !important;
+}
+
+.main-sidebar, .left-side {
+	-webkit-transform: translate(-230px, 0);
+	-ms-transform: translate(-230px, 0);
+	-o-transform: translate(-230px, 0);
+	transform: translate(-230px, 0);
+}
+
+.main-sidebar, .left-side {
+	padding-top: 100px!important;
+}
+
+.content-wrapper, .right-side, .main-footer {
+	margin-left: 0;
+}
+
+.main-header .navbar {
+    margin: 0;
+}
+
+/*
+section#admindashboard .col-md-2 { 
+	float:left; 
+	height: 200px;
+	width: 185px;
+}
+
+
+section#admindashboard .col-sm-3 { 
+	float:left; 
+	height: 200px;
+	width: 185px;
+}
+
+
+section#admindashboard .col-xs-4 { 
+	float:left; 
+	height: 200px;
+	width: 185px;
+}
+*/
+}
+
+
+section#admindashboard div.row div {
+	height: 200px;
+}	

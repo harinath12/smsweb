@@ -1,0 +1,17 @@
+
+Teacher Panel:
+
+#	if we press ok button after taken attandance, ok button should be disabeld.
+	only if any modification occur ok button enable other wise not.
+
+#	In gallery dele option need  and if the mouse pointer on the photo, 
+	how many photos are there, that details we need.
+
+
+IN result :
+#	grade above 90-100  A+, above 80-89 A,  above 70-79 B+, above 60-69 B, 
+	      above 50-59  C+, above 40-49 C
+# 	some subjects we calculate for grade, some subject not calculate to grade but
+	we enter the mark in progress card
+	for ex. lkg and ukg   grade : tam+eng+math+sci   other oral,rhymes
+		iii to v std : tam+eng+math+sci+soci  other mental math,mental gramm,hindi
