@@ -251,3 +251,109 @@ function write_daily_test(){
 
 	return array('status' => 'Success', 'id' => $dailyTestAnswerId);
 }
+
+function get_all_tests(){
+	$data = array(
+		'status' => 'Success'
+	);
+	$data['tests'] = array();
+	$data['report'] = array();
+	$data['review'] = array();
+	$data['question'] = array();
+
+	$user_id = $_REQUEST['user_id'];
+	$data = array();
+
+	$student_sql = "select c.class_name, aca.section_name from student_academic as aca
+	left join classes as c on c.id = aca.class
+	where user_id='$user_id'";
+	$student_exe = mysql_query($student_sql);
+	$student_cnt = @mysql_num_rows($student_exe);
+	$student_fet = mysql_fetch_assoc($student_exe);
+
+	$className = $student_fet['class_name'];
+	$sectionName = $student_fet['section_name'];
+
+	$cls_sql="SELECT * FROM `classes` where class_name='$className'";
+	$cls_exe=mysql_query($cls_sql);
+	$cls_fet = mysql_fetch_assoc($cls_exe);
+	$classId = $cls_fet['id'];
+
+	$ques_sql = "select q.*, c.class_name from daily_test as q
+	left join classes as c on c.id = q.class_id
+	where daily_test_status='1' and q.class_id='$classId' order by id desc";
+	$ques_exe = mysql_query($ques_sql);
+	$ques_cnt = @mysql_num_rows($ques_exe);
+
+	while($ques_fet=mysql_fetch_assoc($ques_exe)){
+		$test_id=$ques_fet['id'];
+		$test_date=date("Y-m-d");
+		$check_test_sql = "select COUNT(id) AS test_count from daily_test_answer where daily_test_id='$test_id' AND `student_id`='$user_id' AND `created_at` LIKE '$test_date%' order by id asc";
+		$check_test_count = mysql_fetch_array(mysql_query($check_test_sql));
+		$test_count=$check_test_count['test_count'];
+
+		$mark_question_query="SELECT COUNT(id) AS mark FROM `daily_test_question` WHERE `daily_test_id`='$test_id'";
+		$mark_question_query_exe=mysql_query($mark_question_query);
+		$mark_question_query_fet=mysql_fetch_assoc($mark_question_query_exe);
+		$ques_fet['mark'] = $mark_question_query_fet['mark'];
+
+		$info = $ques_fet;
+
+		$std_ques_sql = "select * from daily_test_answer where daily_test_id='$test_id' AND `student_id`='$user_id' order by id asc";
+		$std_ques_exe = mysql_query($std_ques_sql);
+		$ques_fet['tests'] = array();
+
+
+		while($std_ques_fet=mysql_fetch_assoc($std_ques_exe)){
+			$daily_test_answer_id=$std_ques_fet['id'];
+												
+			$mark_query="SELECT SUM(daily_test_mark) AS mark FROM `daily_test_question_answer` WHERE `daily_test_answer_id`='$daily_test_answer_id' AND `daily_test_id`='$test_id' ORDER BY `id` DESC";
+			$mark_query_exe=mysql_query($mark_query);
+			$mark_query_fet=mysql_fetch_assoc($mark_query_exe);
+			$std_ques_fet['mark'] = $mark_query_fet['mark'];
+
+			$ques_fet['tests'][] = $std_ques_fet;
+		}
+
+
+		$questions = array('info' => $info, 'questions' => array());
+		$report = array('info' => $info, 'questions' => array());
+		$ques_sql=mysql_query("SELECT * FROM `question_answer` where id IN (SELECT question_id FROM `daily_test_question` WHERE `daily_test_id`='$test_id')");
+        $ques_cnt = mysql_num_rows($ques_sql);
+        while($choose_fet = mysql_fetch_assoc($ques_sql)){
+				
+			if(!isset($data['questions'][$choose_fet['question_type']])){
+				$data['questions'][$choose_fet['question_type']] = array();
+			}
+
+			$questions['questions'][$choose_fet['question_type']][] = $choose_fet;
+
+			$qid=$choose_fet['id'];
+			$correct=0;
+			$wrong=0;
+			$none=0;
+			$ans_query= "SELECT * FROM `daily_test_question_answer` WHERE `daily_test_id`='$test_id' AND `question_id`='$qid' ORDER BY `daily_test_answer_id` ASC";
+			$choose_fet['results'] = array();
+			$ans_query_exe=mysql_query($ans_query);
+			while($ans_query_fet=mysql_fetch_assoc($ans_query_exe))
+			{
+				$choose_fet['results'][] = $ans_query_fet;
+				if($ans_query_fet['daily_test_mark']==1) {
+					$correct++;
+				} else {
+					$wrong++;
+				}
+			}
+			$choose_fet['correct'] = $correct;
+			$choose_fet['wrong'] = $wrong;
+
+			$report['questions'][$choose_fet['question_type']][] = $choose_fet;
+		}
+
+		$data['question']['get_daily_test_questions&user_id='.$_REQUEST['user_id'].'&test_id='.$test_id] = array('status' => 'Success', 'data' => $questions);
+		$data['report']['get_daily_test_report&user_id='.$_REQUEST['user_id'].'&test_id='.$test_id] = get_daily_test_report();
+		$data['tests'][] = $ques_fet;
+	}
+
+	return $data;
+}
