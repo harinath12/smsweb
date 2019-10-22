@@ -73,8 +73,19 @@ function get_daily_test_review(){
 				$choose_fet['results'] = array();
 				$ans_query_exe=mysql_query($ans_query);
 				$choose_fet['urans'] = mysql_fetch_assoc($ans_query_exe);
+				if($choose_fet['urans']['created_at']){
+					$data['info']['updated_at'] = $choose_fet['urans']['created_at'];
+				}
 
+				$mark_query="SELECT SUM(daily_test_mark) AS mark FROM `daily_test_question_answer` WHERE `daily_test_answer_id`='$answer_id' AND `daily_test_id`='$test_id' ORDER BY `id` DESC";
+				$mark_query_exe=mysql_query($mark_query);
+				$mark_query_fet=mysql_fetch_assoc($mark_query_exe);
+				$std_ques_fet['mark'] = $mark_query_fet['mark'];
+
+				$data['info']['mark_scored'] = $std_ques_fet['mark'];
+				
 				$data['questions'][$choose_fet['question_type']][] = $choose_fet;
+
 			}
 		}
 		return array('status' => 'Success', 'data' => $data);

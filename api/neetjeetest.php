@@ -193,34 +193,33 @@ function get_aptitude_report(){
 	}
 }
 
+
 function write_aptitude(){
-	$user_id=$_REQUEST['adminuserid'];
+	$user_id=$_REQUEST['user_id'];
 	$date = date("Y-m-d");
 
-	$aptitude_id = $_REQUEST['test_id'];
-	$aptitude_name = $_REQUEST['test_name'];
-	$aptitude_mark = "";
-	$aptitude_status = "1";
+	$daily_test_id = $_POST['test_id'];
+	$daily_test_name = $_POST['test_name'];
+	$daily_test_mark = "";
+	$daily_test_status = "1";
 	$question_answer_value = "";
 
 	$query = "INSERT INTO `aptitude_test_answer` 
 			(`student_id`, `daily_test_id`, `daily_test_name`, `daily_test_mark`, `daily_test_status`, `created_at`) 
 			VALUES 
-			('$user_id', '$aptitude_id', '$aptitude_name', '$aptitude_mark', '1', CURRENT_TIMESTAMP)";
+			('$user_id', '$daily_test_id', '$daily_test_name', '$daily_test_mark', '1', CURRENT_TIMESTAMP)";
 			   
 	$query_exe = mysql_query($query);
 
-	$selfTestAnswerId = mysql_insert_id();
+	$dailyTestAnswerId = mysql_insert_id();
 
-	$questions = $_REQUEST['questions'];
-	$answers = $_REQUEST['answers'];
-	$question_answer = $_REQUEST['question_answer'];
-	$questions_cnt = count($_REQUEST["questions"]);
-
-    for ($i = 0; $i < $questions_cnt; $i++) {
-		$question_id = $questions[$i];
-		$order_id = $i+1;
-		$answer = strtolower(trim($answers[$question_id]));
+	$questions = $_POST['questions'];
+	$question_answer = $_POST['question_answers'];
+	$i = 1;
+    foreach ($questions as $question_id => $answer) {
+		$order_id = $i;
+		$i++;
+		$answer = strtolower(trim($answer));
 		$question_answer_value=@$question_answer[$question_id];
 		
 		$query_ans = "SELECT * FROM `question_answer` WHERE `id`='$question_id'";
@@ -233,23 +232,23 @@ function write_aptitude(){
 			
 			if($q_answer==$answer)
 			{
-			$aptitude_mark=1;
+			$daily_test_mark=1;
 			}
 			else
 			{
-			$aptitude_mark=0;
+			$daily_test_mark=0;
 			}
 		}
 		else
 		{
 			$answer="N-A";
-			$aptitude_mark=0;
+			$daily_test_mark=0;
 		}
 			
 		$query_question = "INSERT INTO `aptitude_test_question_answer` (`daily_test_id`, `daily_test_answer_id`, `question_id`, `order_id`, `question_answer`, `answer`, `daily_test_mark`, `daily_test_question_answer_status`, `created_at`, `updated_at`) 
-				VALUES ('$aptitude_id', '$selfTestAnswerId', '$question_id', '$order_id', '$question_answer_value', '$answer', '$aptitude_mark', '1', CURRENT_TIMESTAMP, '0000-00-00 00:00:00.000000')";
+				VALUES ('$daily_test_id', '$dailyTestAnswerId', '$question_id', '$order_id', '$question_answer_value', '$answer', '$daily_test_mark', '1', CURRENT_TIMESTAMP, '0000-00-00 00:00:00.000000')";
 		$query_question_exe = mysql_query($query_question);
 	}
 
-	return array('status' => 'Success');
+	return array('status' => 'Success', 'id' => $dailyTestAnswerId);
 }

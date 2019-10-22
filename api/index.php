@@ -6,7 +6,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 
 //define('BASEURL', 'http://localhost/sms2019/');
-define('BASEURL', 'http://dev.srivinayagaschoolpennagaram.com/');
+define('BASEURL', 'http://srivinayagaschoolpennagaram.com/');
 
 $_POST = json_decode(file_get_contents('php://input'), TRUE);
 
