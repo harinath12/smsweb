@@ -11,10 +11,12 @@ where exam_status=1 and (eds.class_id=$classId or eds.class_id=100) GROUP BY ett
 	while($row = mysql_fetch_assoc($exe1)){
 		$examid = $row['id'];
 		$row['subject'] = array();
-		$sub_sql = "SELECT distinct subject_name FROM exam_date_subject WHERE exam_id = '$examid' and (class_id = '$classId' or class_id='100')";
+        $row['grades'] = array();
+		$sub_sql = "SELECT * FROM exam_date_subject WHERE exam_id = '$examid' and (class_id = '$classId' or class_id='100')";
 		$sub_exe = mysql_query($sub_sql);
 		while($sub_fet = mysql_fetch_assoc($sub_exe)){
 		    $row['subject'][] = $sub_fet['subject_name'];
+            $row['grades'][] = $sub_fet['isgrade'];
 		}
 		$row['sub_cnt'] = count($row['subject']);
 
@@ -25,15 +27,21 @@ where exam_status=1 and (eds.class_id=$classId or eds.class_id=100) GROUP BY ett
 		}
 		$row['marks'] = array();
 		$row['total'] = 0;
+        $sub_cnt = 0;
         for($i =0; $i< $row['sub_cnt']; $i++){
             $sub = $row['subject'][$i];
 
             $mark_sql = mysql_fetch_assoc(mysql_query("select mark from student_mark where exam_id='$examid' and student_id='$stud_id' and subject_name='$sub'"));
             $row['marks'][$i] = $mark_sql['mark'];
-            $row['total'] = $row['total'] + $row['marks'][$i];
+            $indd = array_search($sub, $row['subject']);
+            if($row['grades'][$indd] == 1){
+                $row['total'] = $row['total'] + $row['marks'][$i];
+                $sub_cnt++;
+            }
+            
         }
 
-        $avg = $row['total'] / $row['entered_sub_cnt'];
+        $avg = $row['total'] / $sub_cnt;
         if($avg > '90'){
             $row['grade'] = "A1";
         }

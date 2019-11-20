@@ -24,9 +24,26 @@ function get_daily_test_questions(){
         if($ques_cnt> 0)
 		{
 			while($choose_fet = mysql_fetch_assoc($ques_sql)){
-				
+				$tmp = $choose_fet;
+				if($choose_fet['question_type'] == 'Other'){
+					$choose_fet['question_type'] = $choose_fet['other_type'];
+				}
+
 				if(!isset($data['questions'][$choose_fet['question_type']])){
 					$data['questions'][$choose_fet['question_type']] = array();
+				}
+
+				if($choose_fet['question_type'] == 'Fill Up' || $choose_fet['question_type'] == 'Other' || $choose_fet['question_type'] == 'One or Two Words' || $choose_fet['question_type'] == 'True or False'){
+					$choose_fet['ttype'] = 1;
+				} else if($choose_fet['question_type'] == 'Opposites'){
+					$choose_fet['ttype'] = 2;
+				} elseif($choose_fet['question_type'] == 'Meanings' || $choose_fet['question_type'] == 'Match' || $choose_fet['question_type'] == 'Rhyming words'){
+					$choose_fet['ttype'] = 3;
+				} elseif ($choose_fet['question_type'] == 'Missing Letters' || $choose_fet['question_type'] == 'Jumbled Letters' || $choose_fet['question_type'] == 'Jumbled Words') {
+					$choose_fet['ttype'] = 4;
+				}
+				elseif ($choose_fet['question_type'] == 'Choose' ) {
+					$choose_fet['ttype'] = 5;
 				}
 
 				$data['questions'][$choose_fet['question_type']][] = $choose_fet;
@@ -194,8 +211,13 @@ function get_daily_test_report(){
 				}
 				$choose_fet['correct'] = $correct;
 				$choose_fet['wrong'] = $wrong;
+				
+				if(!isset($data['questions'][$choose_fet['question_type']])){
+					$data['questions'][$choose_fet['question_type']] = array();
+				}
 
-				$data['questions'][] = $choose_fet;
+				$data['questions'][$choose_fet['question_type']][] = $choose_fet;
+
 			}
 		}
 		return array('status' => 'Success', 'data' => $data);

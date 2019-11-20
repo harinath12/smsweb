@@ -1,18 +1,23 @@
-<?php /*error_reporting(0);
+<?php error_reporting(0);
 
-$$hostname		=	"localhost";
+/*$$hostname		=	"localhost";
 $username		=	"srivina3_admin";
 $password	    =	"sms_school";
-$database		=	"srivina3_sms_school";
+$database		=	"srivina3_sms_school";*/
+
+$hostname		=	"localhost";
+$username		=	"srivina3_dev";
+$password	    =	"dev@123";
+$database		=	"srivina3_sms_dev_3OCT2019";
 
 $connection	=	@mysql_connect($hostname,$username,$password) or die("not Server not connected");
 $database	=	@mysql_select_db($database) or die("Data base not connected");
 
 mysql_set_charset('utf8',$link);
 mysql_query('set names utf8');
-date_default_timezone_set('Asia/Kolkata');*/
+date_default_timezone_set('Asia/Kolkata');
 
-
+/*
 $hostname		=	"localhost";
 $username		=	"root";
 $password	    =	"";
@@ -43,7 +48,7 @@ function mysql_insert_id() {
     $conn = $GLOBALS['conn'];
     return mysqli_insert_id($conn);
 }
-
+*/
 
 
 function date_display($date,$time='no')

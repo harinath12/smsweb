@@ -27,6 +27,7 @@ $trip_fet = mysql_fetch_assoc($trip_exe);
 $route_no = $trip_fet['route_no'];
 $pickup_drop = $trip_fet['pickup_drop'];
 
+
 if($pickup_drop=="pickup") {
 $trip_stop_sql="SELECT r.*, rs.stop_name, rs.route_id, ts.trip_time as rtrip_time, ts.trip_id FROM `routes` as r
  LEFT JOIN route_stop as rs on rs.route_id = r.id

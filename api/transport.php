@@ -33,7 +33,39 @@ function get_transport(){
 	 where route_no='$route_no' ORDER BY rs.route_order DESC";
 		 
 	 }	 
+
 	$trip_stop_exe=mysql_query($trip_stop_sql);
+	$tripstop = array();
+	$s=0;
+	while ($trip_stop_fet = mysql_fetch_assoc($trip_stop_exe)) {
+		
+
+		$stop_name = $trip_stop_fet['stop_name'];
+
+		$stud_sql = "select gen.*, ts.trip_student_status, ts.trip_id from student_general as gen
+		LEFT JOIN users as usr on usr.id = gen.user_id
+		LEFT JOIN trip_student as ts on gen.user_id = ts.student_id AND trip_id= '$trip_id'
+		where usr.delete_status='1' and gen.stop_from = '$stop_name' and gen.user_id = $user_id";
+		$stud_exe = mysql_query($stud_sql);
+		$trip_stop_fet['student_details']=array();
+		while ($stud_fet = mysql_fetch_assoc($stud_exe)) {
+			$trip_stop_fet['student_details'][]= $stud_fet;
+		}
+
+		if($trip_stop_fet['rtrip_time'] == null && $s==0){
+			$trip_stop_fet['show_on_the_way'] = true;
+			$s = 1;
+		}
+
+		$tripstop[] = $trip_stop_fet;
+	}
+	
+
+	$transport = array('trip' => $trip_fet, 'student_trip' =>$stutrip_fet, 'trip_stop'=> $tripstop);
+
+
+
+	 return array('status' => 'Success', 'data' => $transport);
 
 	$page = $_SERVER['PHP_SELF'];
 	$sec = "10";

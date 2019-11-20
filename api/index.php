@@ -52,7 +52,7 @@ WHERE gen.`admission_number`='$userName' AND users.`password`='$password_md5' an
 
         $class_section_value = $fet['academic']['class_name']." ".$fet['academic']['section_name'];
 
-        $teacher_info_sql="SELECT tg.teacher_name, tg.emp_no, ta.class_teacher FROM `teacher_general` AS tg 
+        $teacher_info_sql="SELECT tg.teacher_name, tg.emp_no, tg.email, ta.class_teacher FROM `teacher_general` AS tg 
         INNER JOIN `teacher_academic` AS ta on tg.user_id = ta.user_id
         WHERE 
         ta.class_teacher = '$class_section_value'";
