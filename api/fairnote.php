@@ -15,9 +15,30 @@ function get_fair_notes(){
     
 	    while($fet = mysql_fetch_assoc($exe))
 	    {
-	   		if(!isset($data[$fet['question_type']])){
-				$data[$fet['question_type']] = array();
-			}
+	   		if($fet['question_type'] == 'Other'){
+					$fet['question_type'] = $fet['other_type'];
+				}
+
+				if(!isset($data[$fet['question_type']])){
+					$data[$fet['question_type']] = array();
+				}
+
+				if($fet['question_type'] == 'Fill Up' || $fet['question_type'] == 'Other' || $fet['question_type'] == 'One or Two Words' ){
+					$fet['ttype'] = 1;
+				} else if($fet['question_type'] == 'Opposites'){
+					$fet['ttype'] = 2;
+				} elseif($fet['question_type'] == 'Meanings' || $fet['question_type'] == 'Match' || $fet['question_type'] == 'Rhyming words' || $choose_fet['question_type'] == 'Plural'){
+					$fet['ttype'] = 3;
+				} elseif ($fet['question_type'] == 'Missing Letters' || $fet['question_type'] == 'Jumbled Letters' || $fet['question_type'] == 'Jumbled Words') {
+					$fet['ttype'] = 4;
+				}
+				elseif ($fet['question_type'] == 'Choose' ) {
+					$fet['ttype'] = 5;
+				} elseif ($fet['question_type'] == 'True or False' ) {
+					$fet['ttype'] = 7;
+				} else {
+					$fet['ttype'] = 6;
+				}
 
 			$data[$fet['question_type']][] = $fet;
 		}
