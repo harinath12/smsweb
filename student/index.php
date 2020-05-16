@@ -80,7 +80,7 @@ if(isset($_SESSION['adminuserid']))
 
 					<!-- Footer -->
 					<div class="footer text-muted">
-						&copy; <?php echo date('Y'); ?> Design and Developed By <a href="#">SMS</a>.
+						&copy; <?php echo date('Y'); ?> Design and Developed By <a href="#">iSoftMinds</a>.
 					</div>
 					<!-- /footer -->
 

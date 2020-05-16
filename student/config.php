@@ -2,7 +2,11 @@
 $hostname		=	"localhost";
 $username		=	"srivina3_dev";
 $password	    =	"dev@123";
-$database		=	"srivina3_sms_dev_3OCT2019";
+$database		=	"srivina3_sms_school_dev";
+/*$hostname		=	"localhost";
+$username		=	"srivina3_admin";
+$password	    =	"sms_school";
+$database		=	"srivina3_sms_school";*/
 
 $connection	=	mysql_connect($hostname,$username,$password) or die("not Server not connected");
 $database	=	mysql_select_db($database) or die("Data base not connected");
@@ -66,7 +70,3 @@ function date_display($date,$time='no')
 	
 	return $date_display;	
 }
-
-?>
-                            
-						

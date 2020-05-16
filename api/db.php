@@ -2,8 +2,7 @@
 $hostname		=	"localhost";
 $username		=	"srivina3_dev";
 $password	    =	"dev@123";
-$database		=	"srivina3_sms_dev_3OCT2019";
-
+$database		=	"srivina3_sms_school_dev";
 /*$hostname		=	"localhost";
 $username		=	"srivina3_admin";
 $password	    =	"sms_school";

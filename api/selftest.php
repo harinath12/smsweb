@@ -13,18 +13,19 @@ function get_self_test_questions(){
 
 		$data['info'] = $ques_bank_fet;
 
-		$mark_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `dailyf_test_id`='$test_id'";
+		/*$mark_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `dailyf_test_id`='$test_id'";
 		$mark_query_exe=mysql_query($mark_query);
 		$mark_query_fet=mysql_fetch_assoc($mark_query_exe);
 
-		$data['info']['mark'] = $mark_query_fet['mark'];
+		$data['info']['mark'] = $mark_query_fet['mark'];*/
+		$data['info']['mark'] = 0;
 
 		$ques_sql=mysql_query("SELECT * FROM `question_answer` where id IN (SELECT question_id FROM `self_test_question` WHERE `daily_test_id`='$test_id')");
         $ques_cnt = mysql_num_rows($ques_sql);
         if($ques_cnt> 0)
 		{
 			while($choose_fet = mysql_fetch_assoc($ques_sql)){
-				
+				$data['info']['mark'] += $choose_fet['question_mark'];
 				if($choose_fet['question_type'] == 'Other'){
 					$choose_fet['question_type'] = $choose_fet['other_type'];
 				}
@@ -74,17 +75,20 @@ function get_self_test_review(){
 
 		$data['info'] = $ques_bank_fet;
 
-		$mark_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `daily_test_id`='$test_id'";
+		/*$mark_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `daily_test_id`='$test_id'";
 		$mark_query_exe=mysql_query($mark_query);
 		$mark_query_fet=mysql_fetch_assoc($mark_query_exe);
 
-		$data['info']['mark'] = $mark_query_fet['mark'];
+		$data['info']['mark'] = $mark_query_fet['mark'];*/
+
+		$data['info']['mark'] = 0;
 
 		$ques_sql=mysql_query("SELECT * FROM `question_answer` where id IN (SELECT question_id FROM `self_test_question` WHERE `daily_test_id`='$test_id')");
         $ques_cnt = mysql_num_rows($ques_sql);
         if($ques_cnt> 0)
 		{
 			while($choose_fet = mysql_fetch_assoc($ques_sql)){
+				$data['info']['mark'] += $choose_fet['question_mark'];
 				$qid=$choose_fet['id'];
 				if($choose_fet['question_type'] == 'Other'){
 					$choose_fet['question_type'] = $choose_fet['other_type'];
@@ -156,7 +160,7 @@ function get_self_tests(){
 		$check_test_count = mysql_fetch_array(mysql_query($check_test_sql));
 		$test_count=$check_test_count['test_count'];
 
-		$mark_question_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `daily_test_id`='$test_id'";
+		$mark_question_query="SELECT SUM(question_mark) AS mark FROM `question_answer` where id IN (SELECT question_id FROM `self_test_question` WHERE `daily_test_id`='$test_id')";
 		$mark_question_query_exe=mysql_query($mark_question_query);
 		$mark_question_query_fet=mysql_fetch_assoc($mark_question_query_exe);
 		$ques_fet['mark'] = $mark_question_query_fet['mark'];
@@ -195,17 +199,19 @@ function get_self_test_report(){
 
 		$data['info'] = $ques_bank_fet;
 
-		$mark_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `daily_test_id`='$test_id'";
+		/*$mark_query="SELECT COUNT(id) AS mark FROM `self_test_question` WHERE `daily_test_id`='$test_id'";
 		$mark_query_exe=mysql_query($mark_query);
 		$mark_query_fet=mysql_fetch_assoc($mark_query_exe);
 
-		$data['info']['mark'] = $mark_query_fet['mark'];
+		$data['info']['mark'] = $mark_query_fet['mark'];*/
+		$data['info']['mark'] = 0;
 
 		$ques_sql=mysql_query("SELECT * FROM `question_answer` where id IN (SELECT question_id FROM `self_test_question` WHERE `daily_test_id`='$test_id')");
         $ques_cnt = mysql_num_rows($ques_sql);
         if($ques_cnt> 0)
 		{
 			while($choose_fet = mysql_fetch_assoc($ques_sql)){
+				$data['info']['mark'] += $choose_fet['question_mark'];
 				$qid=$choose_fet['id'];
 				$correct=0;
 				$wrong=0;
@@ -216,10 +222,10 @@ function get_self_test_report(){
 				while($ans_query_fet=mysql_fetch_assoc($ans_query_exe))
 				{
 					$choose_fet['results'][] = $ans_query_fet;
-					if($ans_query_fet['daily_test_mark']==1) {
-						$correct++;
-					} else {
+					if($ans_query_fet['daily_test_mark']!=0) {
 						$wrong++;
+					} else {
+						$correct++;
 					}
 				}
 				$choose_fet['correct'] = $correct;
@@ -266,17 +272,26 @@ function write_self_test(){
 		$query_ans_exe = mysql_query($query_ans);
 		$query_ans_fet = mysql_fetch_assoc($query_ans_exe);
 		
-		if(!empty($answer))
+		if(!empty($answer) || is_numeric($answer))
 		{
 			$q_answer=strtolower(trim($query_ans_fet['answer']));
-			
-			if($q_answer==$answer)
-			{
-			$daily_test_mark=1;
+			$answer = strtolower(trim($answer));
+			$keyword=strtolower(trim($query_ans_fet['question_keyword']));
+			$exp = explode(',', $keyword);
+			if(count($exp) > 1){
+				$key_arr = array_map(function($a){return trim($a, " ");}, $exp);
+				$user_ans = array_map(function($a){return trim($a, " ");}, explode(',', $answer));
+
+				$out = array_intersect($key_arr,$user_ans);
+
+				$per = (count($out) * 100)/count($exp);
+				$daily_test_mark = round(($per * $query_ans_fet['question_mark'])/100);
+			} elseif($q_answer==$answer || $keyword==$answer){
+				$daily_test_mark=$query_ans_fet['question_mark'];
 			}
 			else
 			{
-			$daily_test_mark=0;
+				$daily_test_mark=0;
 			}
 		}
 		else

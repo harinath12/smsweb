@@ -1,28 +1,25 @@
 <?php error_reporting(0);
-
-/*$$hostname		=	"localhost";
+$hostname		=	"localhost";
+$username		=	"srivina3_dev";
+$password	    =	"dev@123";
+$database		=	"srivina3_sms_school_dev";
+/*$hostname		=	"localhost";
 $username		=	"srivina3_admin";
 $password	    =	"sms_school";
 $database		=	"srivina3_sms_school";*/
 
-$hostname		=	"localhost";
-$username		=	"srivina3_dev";
-$password	    =	"dev@123";
-$database		=	"srivina3_sms_dev_3OCT2019";
-
-$connection	=	@mysql_connect($hostname,$username,$password) or die("not Server not connected");
-$database	=	@mysql_select_db($database) or die("Data base not connected");
+$connection	=	mysql_connect($hostname,$username,$password) or die("not Server not connected");
+$database	=	mysql_select_db($database) or die("Data base not connected");
 
 mysql_set_charset('utf8',$link);
 mysql_query('set names utf8');
 date_default_timezone_set('Asia/Kolkata');
 
-/*
-$hostname		=	"localhost";
+
+/*$hostname		=	"localhost";
 $username		=	"root";
 $password	    =	"";
 $database		=	"sms";
-
 $conn = mysqli_connect($hostname, $username, $password, $database);
 if( mysqli_connect_error()) echo "Failed to connect to MySQL: " . mysqli_connect_error();
 $GLOBALS['conn'] = $conn;
@@ -50,7 +47,6 @@ function mysql_insert_id() {
 }
 */
 
-
 function date_display($date,$time='no')
 {
 	if(!empty($date))
@@ -74,8 +70,3 @@ function date_display($date,$time='no')
 	
 	return $date_display;	
 }
-
-
-?>
-                            
-						
